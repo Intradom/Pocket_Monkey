@@ -91,6 +91,11 @@ public class Controller_Player : MonoBehaviour
 
     private void OnMouseDown()
     {
-        RaycastHit2D hit = Physics2D.Raycast(, Vector2.zero);
+        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, 1 << LayerMask.NameToLayer("Player"));
+
+        if (hit.collider)
+        {
+
+        }
     }
 }
