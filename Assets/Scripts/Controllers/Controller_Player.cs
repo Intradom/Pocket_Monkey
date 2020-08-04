@@ -7,7 +7,8 @@ public class Controller_Player : MonoBehaviour
     // References
     [SerializeField] private LayerMask mask_ground = 0;
     [SerializeField] private Transform ref_ground_check = null;
-    [SerializeField] private Rigidbody2D ref_rbody = null;
+    [SerializeField] private Rigidbody2D ref_self_rbody = null;
+    [SerializeField] private Transform ref_self_transform = null;
 
     // Parameters
     [SerializeField] private float move_speed = 0f;
@@ -41,6 +42,24 @@ public class Controller_Player : MonoBehaviour
     {
         // Variable updates
 
+        Debug.Log(wind_gauge);
+        // Held, put position to cursor's position
+        if (held)
+        {
+            // Charge up
+            wind_gauge += windup_charge_rate_per_second * Time.deltaTime;
+            wind_gauge = (wind_gauge > windup_max) ? windup_max : wind_gauge;
+
+            Vector3 mouse_pos_world = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mouse_pos_world.z = ref_self_transform.position.z;
+            ref_self_transform.position = mouse_pos_world;
+            ref_self_rbody.velocity = Vector2.zero;
+        }
+        else
+        {
+            wind_gauge -= windup_use_rate_per_second * Time.deltaTime;
+            wind_gauge = (wind_gauge < 0) ? 0 : wind_gauge;
+        }
 
         // Check ground collision
         grounded = Physics2D.OverlapCircle((Vector2)ref_ground_check.position, ground_check_rad, mask_ground);
@@ -65,11 +84,14 @@ public class Controller_Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Horizontal
-        float move_hori = move_speed * Time.fixedDeltaTime * (wind_gauge > 0 ? 1 : 0) * (facing_right ? 1 : -1);
+        if (!held && grounded)
+        {
+            // Horizontal
+            float move_hori = move_speed * Time.fixedDeltaTime * (wind_gauge > 0 ? 1 : 0) * (facing_right ? 1 : -1);
 
-        ref_rbody.velocity = new Vector2(move_hori, ref_rbody.velocity.y);
-        //ref_animator.SetFloat("abs_speed_x", Mathf.Abs(move_hori));
+            ref_self_rbody.velocity = new Vector2(move_hori, ref_self_rbody.velocity.y);
+            //ref_animator.SetFloat("abs_speed_x", Mathf.Abs(move_hori));
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -95,7 +117,12 @@ public class Controller_Player : MonoBehaviour
 
         if (hit.collider)
         {
-
+            held = true;
         }
+    }
+
+    private void OnMouseUp()
+    {
+        held = false;
     }
 }
