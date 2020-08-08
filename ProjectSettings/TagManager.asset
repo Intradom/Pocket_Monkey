@@ -5,6 +5,13 @@ TagManager:
   serializedVersion: 2
   tags:
   - Hold_zone
+  - Hold_zone_out
+  - Power_jump
+  - World
+  - Monkey
+  - Bounds
+  - Manager
+  - Platform
   layers:
   - Default
   - TransparentFX
@@ -39,6 +46,15 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 831747941
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Platforms
+    uniqueID: 668770029
+    locked: 0
+  - name: Zone
+    uniqueID: 2996097935
     locked: 0
