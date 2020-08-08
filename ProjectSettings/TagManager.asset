@@ -12,6 +12,7 @@ TagManager:
   - Bounds
   - Manager
   - Platform
+  - Goal
   layers:
   - Default
   - TransparentFX
@@ -57,4 +58,7 @@ TagManager:
     locked: 0
   - name: Zone
     uniqueID: 2996097935
+    locked: 0
+  - name: Text
+    uniqueID: 3154945851
     locked: 0

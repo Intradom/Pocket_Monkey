@@ -16,6 +16,7 @@ public class Behavior_Manager : MonoBehaviour
 
     public void RestartLevel()
     {
+        Behavior_Sounds.Instance.StopSFX();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 

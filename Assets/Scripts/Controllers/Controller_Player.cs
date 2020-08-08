@@ -60,6 +60,8 @@ public class Controller_Player : MonoBehaviour
         // Held, put position to cursor's position
         if (held)
         {
+            Behavior_Sounds.Instance.PlayWind();
+
             // Charge up
             wind_gauge += windup_charge_rate_per_second * Time.deltaTime;
             wind_gauge = (wind_gauge > windup_max) ? windup_max : wind_gauge;
@@ -75,6 +77,15 @@ public class Controller_Player : MonoBehaviour
         {
             wind_gauge -= windup_use_rate_per_second * Time.deltaTime;
             wind_gauge = (wind_gauge < 0) ? 0 : wind_gauge;
+
+            if (wind_gauge > 0)
+            {
+                Behavior_Sounds.Instance.PlayRelease();
+            }
+            else
+            {
+                Behavior_Sounds.Instance.StopSFX();
+            }
         }
 
         // Check ground collision
@@ -87,6 +98,24 @@ public class Controller_Player : MonoBehaviour
             Manager_Sounds.Instance.PlayLand();
         }
         */
+
+        if (Input.GetMouseButtonDown(0) && holdable > 0)
+        {
+            Vector3 mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, 1 << LayerMask.NameToLayer("Player"));
+
+            if (hit.collider && wind_gauge == 0)
+            {
+                held = true;
+                hold_offset.x = ref_self_transform.position.x - mouse_pos.x;
+                hold_offset.y = ref_self_transform.position.y - mouse_pos.y;
+            }
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            held = false;
+        }
     }
 
     private void FixedUpdate()
@@ -121,6 +150,7 @@ public class Controller_Player : MonoBehaviour
         else if (collision.tag == "Power_jump")
         {
             ref_self_rbody.AddForce(new Vector2(0, jump_velocity), ForceMode2D.Force);
+            Behavior_Sounds.Instance.PlayJump();
             Destroy(collision.gameObject);
         }
     }
@@ -138,36 +168,14 @@ public class Controller_Player : MonoBehaviour
     {
         if (collision.collider.tag == "Platform")
         {
-            float angle = Vector2.SignedAngle(Vector2.right, collision.GetContact(0).point);
-
+            float angle = Vector2.SignedAngle(Vector2.right, collision.GetContact(0).normal);
+                        
             // Only change direction if this was a sideways collision
             if (Mathf.Abs(angle) < side_collider_angle_thresh || (180 - Mathf.Abs(angle)) < side_collider_angle_thresh)
             {
                 FlipSprite();
             }
         }
-    }
-
-    private void OnMouseDown()
-    {
-        //Debug.Log(holdable);
-        if (holdable > 0)
-        {
-            Vector3 mouse_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero, Mathf.Infinity, 1 << LayerMask.NameToLayer("Player"));
-
-            if (wind_gauge == 0) // hit.collider && 
-            {
-                held = true;
-                hold_offset.x = ref_self_transform.position.x - mouse_pos.x;
-                hold_offset.y = ref_self_transform.position.y - mouse_pos.y;
-            }
-        }
-    }
-
-    private void OnMouseUp()
-    {
-        held = false;
     }
 
     private void FlipSprite()

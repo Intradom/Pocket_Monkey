@@ -917,7 +917,7 @@ GameObject:
   - component: {fileID: 2437250428101881198}
   m_Layer: 9
   m_Name: Monkey
-  m_TagString: Player
+  m_TagString: Monkey
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1009,11 +1009,13 @@ MonoBehaviour:
   ref_self_transform: {fileID: 1449886931449210448}
   ref_animator_crank: {fileID: 5676037889029650734}
   ref_animator_monkey: {fileID: 6382355385874645669}
-  move_speed: 100
-  jump_velocity: 250
+  tag_manager: Manager
+  move_speed: 400
+  jump_velocity: 750
   windup_max: 1
-  windup_charge_rate_per_second: 0.01
-  windup_use_rate_per_second: 0.01
+  windup_charge_rate_per_second: 0.5
+  windup_use_rate_per_second: 0.1
+  side_collider_angle_thresh: 10
 --- !u!50 &7914058138584609702
 Rigidbody2D:
   serializedVersion: 4
@@ -1079,8 +1081,8 @@ MonoBehaviour:
   - {fileID: 2437250426976030655}
   - {fileID: 2437250426684803571}
   m_Bounds:
-    m_Center: {x: -1.3453526, y: 0.13519335, z: 0}
-    m_Extent: {x: 5.175197, y: 6.431464, z: 0}
+    m_Center: {x: -1.3453503, y: 0.13519478, z: 0}
+    m_Extent: {x: 5.1751966, y: 6.431465, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
 --- !u!95 &6382355385874645669
